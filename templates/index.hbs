@@ -1,0 +1,210 @@
+---
+{
+     "urlFormat": "index.html"
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    {{>head}}
+    <!-- JS Links -->
+    <script src="https://assets.sitescdn.net/answers/v1/answerstemplates.compiled.min.js"></script>
+    <script src="https://assets.sitescdn.net/answers/v1/answers.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://assets.sitescdn.net/answers/v1/answers.css"
+    />
+
+    <!-- layout styling -->
+    <style>
+      .answers-layout {
+        max-width: 50rem;
+        margin: auto;
+      }
+    </style>
+  </head>
+ {{>navbar}}
+  <body>
+    <div class="answers-layout">
+    <div class="searchbar-container"></div>
+    <div class="navigation-container"></div>
+    <div class="spellcheck-container"></div>
+    <div class="universal-container"></div>
+    <div class="vertical-results-container"></div>
+    <div class="directanswer-container"></div>
+   
+  </div>
+   <div class="filters-and-results-layout">
+        <div class="facets-container"></div>
+        <div class="vertical-container"></div>
+      </div>
+    </div>
+
+    <script>
+      ANSWERS.init({
+        apiKey: "547948deeab9d39c0be6eaf8d160b7be",
+        experienceKey: "hospital",
+        businessId: "3707346",
+        experienceVersion: "STAGING",
+
+        verticalPages: [
+          {
+            label: "All",
+            url: "answer-hospital",
+            isFirst: true,
+            isActive: true,
+            hideInNavigation: false
+          },
+          {
+            label: "Doctor specialties",
+            url: "/doctor_speclist",
+            verticalKey: "doctor_specialties",
+            icon: "pin",
+            // iconUrl: "",
+            isFirst: false,
+            isActive: false,
+            hideInNavigation: false
+          },
+          {
+            label: "Doctor Services",
+            url: "/doctor_services",
+            verticalKey: "doctor_services",
+            icon: "support",
+            // iconUrl: "",
+            isFirst: false,
+            isActive: false,
+            hideInNavigation: false
+          },
+          {
+            label: "Doctor",
+            url: "/doctor",
+            verticalKey: "doctor",
+            icon: "pin",
+            // iconUrl: "",
+            isFirst: false,
+            isActive: false,
+            hideInNavigation: false
+          },
+          {
+            label: "Locations",
+            url: "/locations",
+            verticalKey: "locations",
+            icon: "pin",
+            // iconUrl: "",
+            isFirst: false,
+            isActive: false,
+            hideInNavigation: false
+          }
+        ],
+
+        onReady: function () {
+        // init components
+        this.addComponent("SearchBar", {
+          container: ".searchbar-container",
+          allowEmptySearch: false
+        });
+        this.addComponent("Navigation", {
+          container: ".navigation-container",
+        });
+        this.addComponent("SpellCheck", {
+          container: ".spellcheck-container",
+        });
+        this.addComponent("DirectAnswer", {
+          container: ".directanswer-container",
+        });
+        
+        this.addComponent("UniversalResults", {
+          container: ".universal-container",
+          config: {
+            //location data
+           locations: {
+              icon: "pin",
+              card: {
+                cardType: "Standard",
+                dataMappings: {
+                  title: (item) => item.name,
+                  subtitle: (item) => item.address.line1,
+                  details: (item) => item.description,
+                  image: (item) =>
+                    item.photoGallery ? item.photoGallery[0].image.url : null,
+                  url: (item) =>item.slug
+                },
+               
+
+                callsToAction: [
+                 
+                  {
+                    label: "Get Directions",
+                    icon: "directions",
+                    url: "item.slug",
+                    analyticsEventType: "GET_DIRECTIONS",
+                    target: "_self"
+                  },
+                  {
+                    label: "Call",
+                    icon: "phone",
+                    url: (item) => `tel:${ item.slug}`,
+                    analyticsEventType: "TAP_TO_CALL"
+                  }
+                ]
+              }
+              
+            },
+            doctor_specialties: {
+              icon: "support",
+               card: {
+                cardType: "Standard",
+                dataMappings: {
+                  title: (item) => item.name,
+                  url: (item) =>item.slug,
+                  itemTemplate: `<div>
+                       {{{ item.richTextDescription }}}   
+                        </div>`
+                },
+                
+              }
+            },
+           
+         doctor_services: {
+              icon: "briefcase",
+              card: {
+                cardType: "Standard",
+                dataMappings: {
+                  title: (item) => item.name,
+                  details: (item) => item.description, 
+                    url: (item) =>item.slug
+
+                },
+               
+              }
+            },
+
+            doctor: {
+              icon: "briefcase",
+              card: {
+                cardType: "Standard",
+                dataMappings: {
+                  title: (item) => item.name, 
+                   url: (item) =>item.slug
+            
+                },
+               
+              }
+            }
+                
+          }
+        });
+        this.addComponent("LocationBias", {
+          container: ".locationbias-container",
+        });
+      }
+    });
+    </script>
+  </body>
+</html>
